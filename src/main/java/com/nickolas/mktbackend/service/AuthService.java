@@ -27,16 +27,14 @@ public class AuthService implements UserDetailsService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final OTPService otpService;
-     private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
 
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider, OTPService otpService, AuthenticationManager authenticationManager) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,  AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
-        this.otpService = otpService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -46,30 +44,18 @@ public class AuthService implements UserDetailsService{
             throw new UserException("Користувач з таким email вже існує!");
         }
 
-        if (!otpService.verifyOtp(signupRequest.getEmail(), signupRequest.getOtp())) {
-            throw new UserException("Невірний OTP код");
-        }
+
 
         User user = new User();
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRole(Role.ROLE_USER);
-        otpService.generateOtp(user.getEmail());
+       // otpService.generateOtp(user.getEmail());
 
         return userRepository.save(user);
     }
 
-//    public String generateToken(User user) {
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(
-//                //user.getEmail(), null, List.of(new SimpleGrantedAuthority(user.getRole().name()))
-//                user.getEmail(), null, List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
-//        )
-//        );
-//
-//        return jwtProvider.generateToken(authentication);
-//        return jwtProvider.generateToken(authentication);
-//    }
 
     public String generateToken(User user) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -84,9 +70,7 @@ public class AuthService implements UserDetailsService{
         User user = userRepository.findByEmail(signinRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Користувача з таким email не існує"));
 
-        if (!otpService.verifyOtp(signinRequest.getEmail(), signinRequest.getOtp())) {
-          //  throw new UserException("Невірний OTP код");
-        }
+
 
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
             throw new UserException("Невірний пароль");

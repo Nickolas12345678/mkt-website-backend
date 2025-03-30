@@ -22,8 +22,8 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "seller_id", nullable = false)
-    @JsonIgnoreProperties("products")
-    private Seller seller;
+//    @ManyToOne
+//    @JoinColumn(name = "seller_id", nullable = false)
+//    @JsonIgnoreProperties("products")
+//    private Seller seller;
 }

@@ -31,6 +31,7 @@ import java.util.Optional;
 @RequestMapping("/sellers")
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@PreAuthorize("hasRole('ADMIN')")
 public class SellerController {
     private final SellerService sellerService;
     private final UserRepository userRepository;
@@ -38,6 +39,7 @@ public class SellerController {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final SellerRepository sellerRepository;
+
 
 
     @PostMapping("/register")
@@ -50,6 +52,7 @@ public class SellerController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(sellerService.createSeller(seller));
     }
+
 
 
     @PostMapping("/login")
@@ -74,6 +77,7 @@ public class SellerController {
 
         return ResponseEntity.ok(new AuthResponse(token, user.getRole().name(), "Авторизація успішна."));
     }
+
 
 
     @PostMapping("/generate-otp")

@@ -15,6 +15,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
+
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
@@ -25,19 +26,19 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         return ResponseEntity.ok(categoryService.createCategory(category));
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
         return ResponseEntity.ok(categoryService.updateCategory(id, category));
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
