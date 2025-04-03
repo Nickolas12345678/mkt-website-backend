@@ -1,5 +1,7 @@
 package com.nickolas.mktbackend.config;
 
+import com.nickolas.mktbackend.model.User;
+import com.nickolas.mktbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Date;
@@ -45,5 +47,14 @@ public class JwtProvider {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public Long getUserIdFromToken(String token, UserRepository userRepository) {
+        String email = getEmailFromToken(token);
+        if (email != null) {
+            User user = userRepository.findByEmail(email).orElse(null);
+            return user != null ? user.getId() : null;
+        }
+        return null;
     }
 }

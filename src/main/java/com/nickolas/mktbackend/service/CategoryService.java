@@ -48,9 +48,8 @@ public class CategoryService {
     }
 
     public Category createCategory(Category category) {
-        // Додаємо перевірку для description
         if (category.getDescription() == null) {
-            category.setDescription("");  // Установлюємо порожнє значення, якщо description відсутнє
+            category.setDescription("");
         }
         return categoryRepository.save(category);
     }

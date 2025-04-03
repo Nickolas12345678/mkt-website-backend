@@ -64,19 +64,39 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
+////        Seller seller = sellerRepository.findById(productRequest.getSellerId())
+////                .orElseThrow(() -> new RuntimeException("Seller not found"));
+//
+//        Category category = categoryRepository.findById(productRequest.getCategoryId())
+//                .orElseThrow(() -> new RuntimeException("Category not found"));
+//
+//        Product existingProduct = productRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+//
+//
+//
+//        existingProduct.setName(productRequest.getName());
+//        existingProduct.setDescription(productRequest.getDescription());
+//        existingProduct.setPrice(productRequest.getPrice());
+//        existingProduct.setQuantity(productRequest.getQuantity());
+//        existingProduct.setImageURL(productRequest.getImageURL());
+//        existingProduct.setCategory(category);
+//
+//        Product updatedProduct = productRepository.save(existingProduct);
+//        return ResponseEntity.ok(updatedProduct);
+//    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
-//        Seller seller = sellerRepository.findById(productRequest.getSellerId())
-//                .orElseThrow(() -> new RuntimeException("Seller not found"));
-
         Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-
-
 
         existingProduct.setName(productRequest.getName());
         existingProduct.setDescription(productRequest.getDescription());
