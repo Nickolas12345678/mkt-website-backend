@@ -34,62 +34,39 @@ public class ProductController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-//    @PostMapping()
-//    public ResponseEntity<?> createProduct(@RequestBody Product product, @RequestParam("sellerId") Long sellerId) {
-//        Seller seller = sellerRepository.findById(sellerId)
-//                .orElseThrow(() -> new RuntimeException("Seller not found"));
-//        product.setSeller(seller);
-//        Product savedProduct = productRepository.save(product);
-//        return ResponseEntity.ok(savedProduct);
-//    }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest) {
-//        Seller seller = sellerRepository.findById(productRequest.getSellerId())
-//                .orElseThrow(() -> new RuntimeException("Seller not found"));
+        try {
+            if (productRequest.getPrice() <= 0 || productRequest.getQuantity() <= 0) {
+                return ResponseEntity.badRequest().body("Ціна та кількість повинні бути більші за нуль");
+            }
 
-        Category category = categoryRepository.findById(productRequest.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+            Category category = categoryRepository.findById(productRequest.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setPrice(productRequest.getPrice());
-        product.setQuantity(productRequest.getQuantity());
-        product.setImageURL(productRequest.getImageURL());
-        product.setCategory(category);
+            Product product = new Product();
+            product.setName(productRequest.getName());
+            product.setDescription(productRequest.getDescription());
+            product.setPrice(productRequest.getPrice());
+            product.setQuantity(productRequest.getQuantity());
+            product.setImageURL(productRequest.getImageURL());
+            product.setCategory(category);
 
-        Product savedProduct = productRepository.save(product);
-        return ResponseEntity.ok(savedProduct);
+            Product savedProduct = productRepository.save(product);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
-////        Seller seller = sellerRepository.findById(productRequest.getSellerId())
-////                .orElseThrow(() -> new RuntimeException("Seller not found"));
-//
-//        Category category = categoryRepository.findById(productRequest.getCategoryId())
-//                .orElseThrow(() -> new RuntimeException("Category not found"));
-//
-//        Product existingProduct = productRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Product not found"));
-//
-//
-//
-//        existingProduct.setName(productRequest.getName());
-//        existingProduct.setDescription(productRequest.getDescription());
-//        existingProduct.setPrice(productRequest.getPrice());
-//        existingProduct.setQuantity(productRequest.getQuantity());
-//        existingProduct.setImageURL(productRequest.getImageURL());
-//        existingProduct.setCategory(category);
-//
-//        Product updatedProduct = productRepository.save(existingProduct);
-//        return ResponseEntity.ok(updatedProduct);
-//    }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
+
+
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
@@ -109,44 +86,20 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id, @RequestParam("sellerId") Long sellerId) {
-//        Seller seller = sellerRepository.findById(sellerId)
-//                .orElseThrow(() -> new RuntimeException("Seller not found"));
-//
-//        Product product = productRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Product not found"));
-//
-//        if (!product.getSeller().getId().equals(seller.getId())) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Ви не можете видалити цей товар");
-//        }
-//
-//        productRepository.delete(product);
-//        return ResponseEntity.ok("Товар видалено");
-//    }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id, @RequestBody DeleteProductRequest request) {
-//        Seller seller = sellerRepository.findById(request.getSellerId())
-//                .orElseThrow(() -> new ProductException("Продавця не знайдено", HttpStatus.NOT_FOUND));
-
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductException("Товар не знайдено", HttpStatus.NOT_FOUND));
-
-//        if (!product.getSeller().getId().equals(seller.getId())) {
-//           throw new ProductException("Ви не можете видалити цей товар", HttpStatus.FORBIDDEN);
-//        }
 
         productRepository.delete(product);
         return ResponseEntity.ok("Товар видалено");
     }
 
 
-//    @GetMapping("/my")
-//    public ResponseEntity<List<Product>> getMyProducts(@AuthenticationPrincipal Seller seller) {
-//        return ResponseEntity.ok(productService.getProductsBySeller(seller.getId()));
-//    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
@@ -154,20 +107,35 @@ public class ProductController {
     }
 
 
+
+
+
+
     @GetMapping
     public ResponseEntity<Page<Product>> getAllProducts(ProductRequestParams params) {
-        Pageable pageable;
+        String sortBy = "id";  // За замовчуванням сортуємо за 'id'
 
-        if (params.getSortOrder() == null || params.getSortOrder().isBlank()) {
-            pageable = PageRequest.of(params.getPage(), params.getSize());
-        } else {
-            pageable = PageRequest.of(params.getPage(), params.getSize(),
-                    Sort.by(params.getSortOrder().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "price"));
+
+        if (params.getSortOrder().equalsIgnoreCase("asc") || params.getSortOrder().equalsIgnoreCase("desc")) {
+            sortBy = "price";  // Якщо вибрано сортування за ціною, використовуємо 'price'
         }
+
+
+        Sort.Direction direction = params.getSortOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+
+        Pageable pageable = PageRequest.of(params.getPage(), params.getSize(), Sort.by(direction, sortBy));
+
 
         Page<Product> products = productService.getProductsByFilters(params.getName(), params.getCategoryId(), pageable);
         return ResponseEntity.ok(products);
     }
+
+
+
+
+
+
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<Product>> getProductsByCategory(@PathVariable("categoryId") Long categoryId, Pageable pageable) {

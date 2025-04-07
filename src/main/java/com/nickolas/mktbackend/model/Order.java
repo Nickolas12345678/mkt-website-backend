@@ -1,5 +1,7 @@
 package com.nickolas.mktbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.nickolas.mktbackend.domain.DeliveryMethod;
 import com.nickolas.mktbackend.domain.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,5 +28,10 @@ public class Order {
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order")
+    @JsonManagedReference
     private List<OrderItem> items;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryMethod deliveryMethod;
+
 }

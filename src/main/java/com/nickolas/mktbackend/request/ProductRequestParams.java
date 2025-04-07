@@ -9,4 +9,5 @@ public class ProductRequestParams {
     private String name;
     private Long categoryId;
     private String sortOrder = "";
+    private String sortBy = "id";
 }
