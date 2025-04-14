@@ -113,11 +113,11 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<Product>> getAllProducts(ProductRequestParams params) {
-        String sortBy = "id";  // За замовчуванням сортуємо за 'id'
+        String sortBy = "id";
 
 
         if (params.getSortOrder().equalsIgnoreCase("asc") || params.getSortOrder().equalsIgnoreCase("desc")) {
-            sortBy = "price";  // Якщо вибрано сортування за ціною, використовуємо 'price'
+            sortBy = "price";
         }
 
 

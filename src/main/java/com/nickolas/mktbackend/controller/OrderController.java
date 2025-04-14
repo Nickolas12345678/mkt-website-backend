@@ -1,8 +1,10 @@
 package com.nickolas.mktbackend.controller;
 
 import com.nickolas.mktbackend.config.JwtProvider;
+import com.nickolas.mktbackend.domain.OrderStatus;
 import com.nickolas.mktbackend.model.Order;
 import com.nickolas.mktbackend.request.CreateOrderRequest;
+import com.nickolas.mktbackend.request.UpdateOrderStatusRequest;
 import com.nickolas.mktbackend.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +71,23 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/update-status/{orderId}")
+    public ResponseEntity<String> updateOrderStatus(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("orderId") Long orderId,
+            @RequestBody UpdateOrderStatusRequest statusRequest) {
+        try {
+            String email = jwtProvider.getEmailFromToken(token);
+            orderService.updateOrderStatus(email, orderId, statusRequest.getStatus());
+            return ResponseEntity.ok("Order status updated successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 
 
     @DeleteMapping("/cancel/{orderId}")

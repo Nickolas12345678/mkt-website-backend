@@ -4,7 +4,6 @@ public class LoginRequest {
     private String email;
     private String password;
 
-    // Геттери та сеттери
     public String getEmail() {
         return email;
     }
