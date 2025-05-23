@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "products") // Назва таблиці в БД
+@Table(name = "products")
 @Data
 public class Product {
     @Id
@@ -21,9 +21,4 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-//    @ManyToOne
-//    @JoinColumn(name = "seller_id", nullable = false)
-//    @JsonIgnoreProperties("products")
-//    private Seller seller;
 }

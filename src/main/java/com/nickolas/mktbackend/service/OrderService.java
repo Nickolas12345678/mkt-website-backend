@@ -24,9 +24,6 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-
-
-
     @Transactional
     public Order createOrder(String userEmail, CreateOrderRequest orderRequest) {
         User user = userRepository.findByEmail(userEmail)
@@ -95,8 +92,6 @@ public class OrderService {
         return savedOrder;
     }
 
-
-
     @Transactional
     public List<Order> getAllOrders(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
@@ -108,7 +103,6 @@ public class OrderService {
 
         return orderRepository.findAll();
     }
-
 
     @Transactional
     public List<Order> getOrdersForUser(String userEmail) {
@@ -133,11 +127,6 @@ public class OrderService {
 
         return order;
     }
-
-
-
-
-
 
     @Transactional
     public void updateOrderStatus(String userEmail, Long orderId, OrderStatus newStatus) {
@@ -203,10 +192,6 @@ public class OrderService {
         return isDecreasingStatus(status);
     }
 
-
-
-
-
     private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
         return switch (currentStatus) {
             case PENDING -> newStatus == OrderStatus.SHIPPED || newStatus == OrderStatus.CANCELED || newStatus == OrderStatus.PICKUP_READY;
@@ -215,12 +200,6 @@ public class OrderService {
             case DELIVERED, CANCELED -> false;
         };
     }
-
-
-
-
-
-
 
     @Transactional
     public void cancelOrder(String userEmail, Long orderId) {
@@ -250,7 +229,5 @@ public class OrderService {
         order.setStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
     }
-
-
 
 }

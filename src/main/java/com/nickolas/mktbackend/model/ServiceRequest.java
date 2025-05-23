@@ -22,6 +22,7 @@ public class ServiceRequest {
     @JoinColumn(name = "repair_service_id")
     private RepairService repairService;
 
+    @Column(length = 60000)
     private String description;
 
     private LocalDateTime requestDate;

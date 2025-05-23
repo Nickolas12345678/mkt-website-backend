@@ -34,7 +34,6 @@ public class ProductController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest) {
         try {
@@ -62,11 +61,6 @@ public class ProductController {
         }
     }
 
-
-
-
-
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
@@ -86,9 +80,6 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
         Product product = productRepository.findById(id)
@@ -98,44 +89,22 @@ public class ProductController {
         return ResponseEntity.ok("Товар видалено");
     }
 
-
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-
-
-
-
-
     @GetMapping
     public ResponseEntity<Page<Product>> getAllProducts(ProductRequestParams params) {
         String sortBy = "id";
-
-
         if (params.getSortOrder().equalsIgnoreCase("asc") || params.getSortOrder().equalsIgnoreCase("desc")) {
             sortBy = "price";
         }
-
-
         Sort.Direction direction = params.getSortOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-
-
         Pageable pageable = PageRequest.of(params.getPage(), params.getSize(), Sort.by(direction, sortBy));
-
-
         Page<Product> products = productService.getProductsByFilters(params.getName(), params.getCategoryId(), pageable);
         return ResponseEntity.ok(products);
     }
-
-
-
-
-
-
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<Product>> getProductsByCategory(@PathVariable("categoryId") Long categoryId, Pageable pageable) {

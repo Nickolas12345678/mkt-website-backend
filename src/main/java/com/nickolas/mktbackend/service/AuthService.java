@@ -29,8 +29,6 @@ public class AuthService implements UserDetailsService{
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
-
-
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,  AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -43,16 +41,11 @@ public class AuthService implements UserDetailsService{
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             throw new UserException("Користувач з таким email вже існує!");
         }
-
-
-
         User user = new User();
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRole(Role.ROLE_USER);
-       // otpService.generateOtp(user.getEmail());
-
         return userRepository.save(user);
     }
 
@@ -65,19 +58,13 @@ public class AuthService implements UserDetailsService{
         return jwtProvider.generateToken(authentication);
     }
 
-
     public AuthResponse authenticateUser(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Користувача з таким email не існує"));
-
-
-
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
             throw new UserException("Невірний пароль");
         }
-
         String token = generateToken(user);
-
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(token);
         authResponse.setRole(user.getRole().name());
@@ -89,13 +76,10 @@ public class AuthService implements UserDetailsService{
         return authResponse;
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UserException("Користувача з таким email не існує"));
-
-
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole().name()))
         );

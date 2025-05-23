@@ -10,5 +10,4 @@ public class ProductRequest {
     private Integer quantity;
     private String imageURL;
     private Long categoryId;
-    //private Long sellerId;
 }

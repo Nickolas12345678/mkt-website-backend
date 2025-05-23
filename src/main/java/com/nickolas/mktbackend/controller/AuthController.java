@@ -70,25 +70,4 @@ public class AuthController {
             return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
         }
     }
-
-//    @PostMapping("/otp/generate")
-//    public ResponseEntity<String> generateOtp(@RequestBody Map<String, String> request) {
-//        String email = request.get("email");
-//        otpService.generateOtp(email);
-//        return ResponseEntity.ok("OTP відправлено на email: " + email);
-//    }
-//
-//    @PostMapping("/otp/verify")
-//    public ResponseEntity<?> verifyOtp(@RequestBody Map<String, String> request) {
-//        String email = request.get("email");
-//        String otp = request.get("otp");
-//
-//        boolean isValid = otpService.verifyOtp(email, otp);
-//
-//        if (isValid) {
-//            return ResponseEntity.ok(Map.of("message", "OTP підтверджено"));
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Неправильний OTP"));
-//        }
-//    }
 }

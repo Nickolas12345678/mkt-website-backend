@@ -18,7 +18,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-//        product.setSeller(seller);
         return productRepository.save(product);
     }
 
@@ -26,10 +25,6 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, Product productDetails) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Товар не знайдено"));
-
-//        if (!product.getSeller().getId().equals(seller.getId())) {
-//            throw new RuntimeException("У вас немає прав на зміну цього товару");
-//        }
 
         product.setName(productDetails.getName());
         product.setDescription(productDetails.getDescription());
@@ -45,11 +40,6 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Товар не знайдено"));
-
-//        if (!product.getSeller().getId().equals(seller.getId())) {
-//            throw new RuntimeException("У вас немає прав на видалення цього товару");
-//        }
-
         productRepository.deleteById(id);
     }
 
@@ -81,10 +71,4 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
         return productRepository.findByCategoryId(categoryId, pageable);
     }
-
-//    @Override
-//    public List<Product> getProductsBySeller(Long sellerId) {
-//        return productRepository.findBySellerId(sellerId);
-//    }
-
 }

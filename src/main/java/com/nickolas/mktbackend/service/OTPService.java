@@ -92,7 +92,7 @@ public class OTPService {
         }
 
         if (storedOtp.equals(otp)) {
-            verifiedEmails.add(email); // Позначаємо email як підтверджений
+            verifiedEmails.add(email);
             otpStore.remove(email);
             otpExpiryStore.remove(email);
             return true;

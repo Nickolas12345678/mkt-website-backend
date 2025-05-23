@@ -8,5 +8,4 @@ import org.springframework.data.repository.query.Param;
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     @Query("SELECT COALESCE(SUM(ci.quantity), 0) FROM CartItem ci WHERE ci.product.id = :productId")
     int sumQuantityByProductId(@Param("productId") Long productId);
-
 }

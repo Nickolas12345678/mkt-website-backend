@@ -13,95 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 public class CartController {
-//    private final CartService cartService;
-//
-//    @GetMapping
-//    public ResponseEntity<Cart> getCart(@RequestHeader(value = "Authorization", required = true) String token) {
-//        Cart cart = cartService.getCart(token);
-//        return ResponseEntity.ok(cart);
-//    }
-//
-////    @PostMapping("/add")
-////    public ResponseEntity<String> addToCart(
-////            @RequestHeader(value = "Authorization", required = true) String token,
-////            @RequestBody CartItemRequest request) {
-////        cartService.addToCart(token, request.getProductId(), request.getQuantity());
-////        return ResponseEntity.ok("Товар успішно додано до кошика!");
-////    }
-//
-//    @PostMapping("/add")
-//    public ResponseEntity<String> addToCart(
-//            @RequestHeader(value = "Authorization", required = true) String token,
-//            @RequestBody CartItemRequest request) {
-//        try {
-//            cartService.addToCart(token, request.getProductId());
-//            return ResponseEntity.ok("Товар успішно додано до кошика!");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    @DeleteMapping("/remove/{productId}")
-//    public ResponseEntity<String> removeFromCart(
-//            @RequestHeader(value = "Authorization", required = true) String token,
-//            @PathVariable("productId") Long productId) {
-//        cartService.removeFromCart(token, productId);
-//        return ResponseEntity.ok("Товар видалено з кошика.");
-//    }
-//
-//    @DeleteMapping("/clear")
-//    public ResponseEntity<String> clearCart(@RequestHeader(value = "Authorization", required = true) String token) {
-//        cartService.clearCart(token);
-//        return ResponseEntity.ok("Кошик очищено.");
-//    }
-//
-//
-//
-//    @PostMapping("/increase/{productId}")
-//    public ResponseEntity<String> increaseQuantity(
-//            @RequestHeader(value = "Authorization", required = true) String token,
-//            @PathVariable("productId") Long productId) {
-//        cartService.increaseQuantity(token, productId);
-//        return ResponseEntity.ok("Кількість товару збільшено.");
-//    }
-//
-//    @PostMapping("/decrease/{productId}")
-//    public ResponseEntity<String> decreaseQuantity(
-//            @RequestHeader(value = "Authorization", required = true) String token,
-//            @PathVariable("productId") Long productId) {
-//        try {
-//            cartService.decreaseQuantity(token, productId);
-//            return ResponseEntity.ok("Кількість товару зменшено.");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 
     private final CartService cartService;
 
-//    @GetMapping
-//    public ResponseEntity<Cart> getCart(@RequestHeader(value = "Authorization", required = true) String token) {
-//        try {
-//            Cart cart = cartService.getCart(token);
-//            return ResponseEntity.ok(cart);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
 
-//    // Контролер для отримання кошика
-//    @GetMapping
-//    public ResponseEntity<Cart> getCart(@RequestHeader(value = "Authorization", required = true) String token) {
-//        try {
-//            Cart cart = cartService.getCart(token);
-//            for (CartItem cartItem : cart.getItems()) {
-//                cartItem.getProduct().setImageURL(cartItem.getProduct().getImageURL());
-//            }
-//            return ResponseEntity.ok(cart);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
 
     @GetMapping
     public ResponseEntity<Cart> getCart(@RequestHeader(value = "Authorization", required = true) String token) {
